@@ -1,0 +1,21 @@
+import random
+done = False
+score = 0
+guess = 100
+num = 0
+print("Guess a number between one and one hundred.")
+while not done:
+    num = random.randrange(1,100)
+    while guess != num:
+        guess = int(input("What's your guess?"))
+        if guess > num:
+            print("The number is a little lower.")
+        elif guess < num:
+            print("The number is a little higher.")
+        else:
+            print("Correct!")
+            score +=1
+            state = input("Would you like to play again? Type yes or no.")
+            if state.lower().strip() == "no":
+                done = True
+print("The game is over. Your score was:",score)
