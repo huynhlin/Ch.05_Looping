@@ -28,34 +28,34 @@ while q == False:
         print("Your choice is rock.")
         if pc == 2:
             losscount = losscount+1
-            print("The computer chose paper. That means one point for the computer! You now have:",losscount,
+            print("The computer chose paper. That means one point for the computer. You now have:",losscount,
                   "losses! Better luck next time.")
             print("Onto the next round!")
         elif pc == 3:
             wincount = wincount+1
-            print("The computer chose scissors. According to the rules that nets you one more point! You now have:",wincount,
+            print("The computer chose scissors. According to the rules that nets you one more point. You now have:",wincount,
                   "wins! Congratulations player, you'll be in the big leagues in no time.")
             print("Onto the next round!")
         else:
             tiecount = tiecount+1
-            print("The computer chose rock. Jinx! You guys tied! There have been:",tiecount,
+            print("The computer chose rock. Jinx! You guys tied. There have been:",tiecount,
                   "ties this session. Try being a little more original.")
             print("Onto the next round!")
     elif uc == 2:
         print("Your choice is paper.")
         if pc == 3:
             losscount = losscount+1
-            print("The computer chose scissors. That means one point for the computer! You now have:",losscount,
+            print("The computer chose scissors. That means one point for the computer. You now have:",losscount,
                   "losses! Better luck next time.")
             print("Onto the next round!")
         elif pc == 2:
             tiecount = tiecount+1
-            print("The computer chose paper. Jinx! You guys tied! There have been:",tiecount,
+            print("The computer chose paper. Jinx! You guys tied. There have been:",tiecount,
                   "ties this session. Try being a little more original.")
             print("Onto the next round!")
         else:
             wincount = wincount+1
-            print("The computer chose rock. According to the rules that nets you one more point! You now have:",wincount,
+            print("The computer chose rock. According to the rules that nets you one more point. You now have:",wincount,
                   "wins! Congratulations player, you'll be in the big leagues in no time.")
             print("Onto the next round!")
 
@@ -63,24 +63,26 @@ while q == False:
         print("Your choice is scissors.")
         if pc == 2:
             wincount = wincount + 1
-            print("The computer chose paper. According to the rules that nets you one more point! You now have:",
+            print("The computer chose paper. According to the rules that nets you one more point. You now have:",
                   wincount, "wins! Congratulations player, you'll be in the big leagues in no time.")
             print("Onto the next round!")
         elif pc == 3:
             tiecount = tiecount + 1
-            print("The computer chose scissors. Jinx! You guys tied! There have been:", tiecount,
+            print("The computer chose scissors. Jinx! You guys tied. There have been:", tiecount,
                   "ties this session. Try being a little more original.")
             print("Onto the next round!")
         else:
             losscount = losscount + 1
-            print("The computer chose rock. That means one point for the computer! You now have:", losscount,
+            print("The computer chose rock. That means one point for the computer. You now have:", losscount,
                   "losses! Better luck next time.")
             print("Onto the next round!")
     else:
         if wincount == 0 and losscount == 0 and tiecount == 0:
             print("You didn't even play! Try your luck before quitting.")
         else:
+            q = True
             winrate = wincount/(losscount+wincount)
             percent = winrate*100
-            print("Thank you for playing. You had a total of:", wincount,"wins,",losscount,"losses, and",tiecount,
-                  "ties. That adds up to a winrate of:",percent,"percent. Thanks for playing!")
+            formatpercent = "{:.2f}".format(percent)
+            print("Thank you for playing. You had a total of:", wincount, "wins,", losscount, "losses, and", tiecount,
+                  "ties. That adds up to a winrate of:", formatpercent, "percent. Thanks for playing!")
