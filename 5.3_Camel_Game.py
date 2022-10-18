@@ -13,6 +13,7 @@ radar = True
 ae = False
 raygun = False
 done = False
+breakv = False
 aliendistance = -20
 playerdistance = 0
 distance = playerdistance - aliendistance
@@ -22,28 +23,79 @@ heat = 0
 totalm = 0
 totald = 0
 
-# not working :(
-# def reassign():
-#     choice = "blank"
-#     fuel = 10
-#     alienmr = random.randrange(8, 16)
-#     days = 0
-#     tank = 10
-#     travel = 0
-#     miles = 0
-#     dialogue = True
-#     dialogue2 = True
-#     radar = True
-#     ae = False
-#     raygun = False
-#     done = False
-#     aliendistance = -20
-#     playerdistance = 0
-#     distance = playerdistance - aliendistance
-#     stage = 1
-#     events = 0
-#     heat = 0
-#
+
+def leave():
+    global done
+    global again
+    global breakv
+    again = input("Would you like to play again?")
+    print()
+    if again.lower().strip() == "no":
+        done = True
+        breakv = True
+    else:
+        print("The game will now continue.")
+        print()
+        reassign()
+
+
+def checkstatus():
+    print("Total days passed:", days, "days.")
+    print("Miles traveled:", playerdistance, "miles.")
+    print("Spare fuel:", fuel, "gallons.")
+    print("Your heat level is:", heat, )
+    print("The aliens are", distance, "miles behind you.")
+    print()
+
+
+def reassign():
+    global totalm
+    global totald
+    global choice
+    global fuel
+    global alienmr
+    global days
+    global tank
+    global travel
+    global miles
+    global dialogue
+    global dialogue2
+    global radar
+    global ae
+    global raygun
+    global done
+    global breakv
+    global aliendistance
+    global playerdistance
+    global distance
+    global stage
+    global events
+    global heat
+    totalm += miles
+    totald += days
+    choice = "blank"
+    fuel = 10
+    alienmr = random.randrange(8, 16)
+    days = 0
+    tank = 10
+    travel = 0
+    miles = 0
+    dialogue = True
+    dialogue2 = True
+    radar = True
+    ae = False
+    raygun = False
+    done = False
+    breakv = False
+    aliendistance = -20
+    playerdistance = 0
+    distance = playerdistance - aliendistance
+    stage = 1
+    events = 0
+    heat = 0
+    # this one took me forever to figure out that I needed to global all vars, but it saved like 200 lines of code :D
+
+
 def rgending():
     print("You hate to do this, but there's no other options.")
     print("You open the hatch on your spaceship, exiting while holding the raygun.")
@@ -113,13 +165,15 @@ achievement_2 = False
 achievement_3 = False
 # third ending, safely creating a base on another planet to escape the aliens
 achievement_4 = False
-# fourth ending, joining the aliens
+# either fail achievement 3 or get really unlucky and explode while refueling
 achievement_5 = False
-# fifth ending, defeating the aliens
+# fifth ending, joining the aliens
 achievement_6 = False
-# spaceship overheat ending
+# sixth ending, defeating the aliens
 achievement_7 = False
-# getting the 5 prior achievements in one run, mastery achievement kind of
+# seventh ending, spaceship overheat ending
+achievement_8 = False
+# getting the 7 prior achievements in one run, mastery achievement kind of
 acs = 0
 
 if dialogue:
@@ -128,12 +182,12 @@ if dialogue:
     print("You are running from a group of aliens who wish to take you in for experimentation.")
     print("You must manage your fuel, heat, and items to find an escape.")
     print("If they catch up to you, you will receive a 'Game Over'.")
-    print("If you outrun them and return to earth, you will receive a 'Victory'.")
-    print("These are not the only outcomes however, there are also 3 more secret endings.")
-    print("You can quit during ABCDE events by typing 'quit'.")
-    print("You can also check your inventory during ABCDE events by typing 'i'.")
+    print("If you survive, you will receive a 'Victory'.")
+    print("There are also a number of secret endings.")
+    print("During multiple choice events you can quit the game by typing 'quit' "
+          "or check your inventory by typing 'i'.")
     print("When you quit the game, you will be able to"
-          "see your statistics, including your total amount of interactions, achievements earned, and more.")
+          "see your statistics, including total miles traveled, total days played, and achievements earned.")
     print("The game will now commence.")
     print()
 
@@ -158,73 +212,21 @@ while not done:
         if heat > 4:
             print("Gave over!")
             print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
-            if not achievement_6:
+            if not achievement_7:
                 print("Achievement 'Haste Makes Waste' has been unlocked!")
-                achievement_6 = True
-            again = input("Would you like to try again?")
-            print()
-            if again.lower().strip() == "no":
-                done = True
+                achievement_7 = True
+            leave()
+            if breakv:
                 break
-            else:
-                print("The game will now continue.")
-                print()
-                totalm += miles
-                totald += days
-                choice = "blank"
-                fuel = 10
-                alienmr = random.randrange(8, 16)
-                days = 0
-                tank = 10
-                travel = 0
-                miles = 0
-                dialogue = True
-                dialogue2 = True
-                radar = True
-                ae = False
-                raygun = False
-                done = False
-                aliendistance = -20
-                playerdistance = 0
-                distance = playerdistance - aliendistance
-                stage = 1
-                events = 0
-                heat = 0
         if distance < 1:
             print("Game over!")
             print("The aliens caught up to you. Was it just bad luck or could you have played better?")
             if not achievement_1:
                 print("Achievement 'Inferior Species' has been unlocked!")
                 achievement_1 = True
-            again = input("Would you like to try again?")
-            print()
-            if again.lower().strip() == "no":
-                done = True
+            leave()
+            if breakv:
                 break
-            else:
-                print("The game will now continue.")
-                print()
-                totalm += miles
-                totald += days
-                choice = "blank"
-                fuel = 10
-                alienmr = random.randrange(8, 16)
-                days = 0
-                tank = 10
-                travel = 0
-                miles = 0
-                dialogue = True
-                dialogue2 = True
-                radar = True
-                ae = False
-                raygun = False
-                done = False
-                aliendistance = -20
-                playerdistance = 0
-                distance = playerdistance - aliendistance
-                stage = 1
-                events = 0
-                heat = 0
         interaction = random.randrange(1, 100)
         if interaction > 95:
             if heat > 0:
@@ -233,6 +235,8 @@ while not done:
             box = input("Will you go out and investigate? Type yes or no.")
             print()
             if box.lower().strip() == "yes" and not ae:
+                if heat > 0:
+                    heat -= 1
                 print("Inside you found a gallon of fuel and what looks like some kind of foreign book!")
                 print("After investigating the book more, it appears to be an alien manifest.")
                 print("Good find! It might prove useful in the future.")
@@ -248,18 +252,19 @@ while not done:
                 print()
                 fuel += 2
             else:
-                stage = 100
                 done = True
+                break
             events += 1
             # manuscript interaction with 5% chance of happening
             # unlocks the join alien ending in the future
-        elif interaction > 80:
-            if not radar:
+        elif interaction > 85:
+            if radar:
                 print("Using the ship's built in radar, you see that the aliens are", distance, "miles behind you.")
                 print()
                 events += 1
-            else:
                 radar = False
+            else:
+                radar = True
         elif interaction > 20:
             print("You feel like your velocity needs some tinkering with so you stop for a moment to "
                   "change something.")
@@ -284,8 +289,8 @@ while not done:
                     heat += 1
                 print("You decided to keep up a moderate speed for today and tonight. This "
                       "will use one gallon of gas.")
-                print("Your spaceship has a heat level of:", heat, ". If this level reaches 5, your ship will"
-                                                                   " spontaneously combust. Be careful.")
+                print("Your spaceship has a heat level of:", heat,)
+                print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
                 travel = random.randrange(8, 16)
                 print("You travelled", travel, "miles today.")
                 miles += travel
@@ -297,8 +302,8 @@ while not done:
                 heat += 2
                 print("You decided to go full speed for today and tonight. This "
                       "will use two gallons of gas.")
-                print("Your spaceship has a heat level of:", heat, ". If this level reaches 5, your ship will"
-                                                                   " spontaneously combust. Be careful.")
+                print("Your spaceship has a heat level of:", heat, )
+                print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
                 travel = random.randrange(10, 20)
                 print("You travelled", travel, "miles today.")
                 events += 1
@@ -315,14 +320,7 @@ while not done:
                 aliendistance += alienmr
                 events = 0
             elif choice.strip().upper() == "E":
-                aliendistance += alienmr
-                print("Total days passed:", days, "days.")
-                print("Miles traveled:", playerdistance, "miles.")
-                print("Spare fuel:", fuel, "gallons.")
-                print("Gallons of fuel in tank:", tank, "gallons.")
-                print("Your heat level is:", heat,)
-                print("The aliens are", distance, "miles behind you.")
-                print()
+                checkstatus()
             elif choice.strip().upper() == "I":
                 if raygun and ae:
                     print("You have a raygun and the alien manifest.")
@@ -365,8 +363,10 @@ while not done:
                     print()
             else:
                 if choice.lower().strip() == "quit":
+                    totalm += miles
+                    totald += days
                     done = True
-                    stage = 100
+                    break
                 # gas interaction with 60% chance of happening
         elif interaction > 10:
             if heat > 0:
@@ -376,9 +376,18 @@ while not done:
             take = input("Will you take the fuel? Type yes or no.")
             print()
             if take.lower().strip() == "yes":
-                fuel += 5
-                print("You took the fuel. You now have", fuel, "gallons of fuel.")
-                print()
+                rng = random.randrange(1, 100)
+                if rng != 1:
+                    fuel += 5
+                    print("You took the fuel. You now have", fuel, "gallons of fuel.")
+                    print()
+                else:
+                    print("While trying to take the fuel, you accidentally drop a lighter and cause an explosion!")
+                    print("You died!")
+                    if not achievement_4:
+                        print("Achievement 'Die Trying' has been unlocked!")
+                        achievement_4 = True
+
             elif take.lower().strip() == "no":
                 print("You decided not to take the fuel. Let's hope this is not a regrettable decision.")
                 print()
@@ -418,10 +427,12 @@ while not done:
             # sight interaction with 8% chance of happening
         else:
             if not raygun:
-                heat -= 1
+                if heat > 0:
+                    heat -= 1
                 print("You decided to examine the exterior of your ship on a whim.")
                 print("You found a ray-gun taped to the bottom of your ship!")
                 print("This may prove useful in the future.")
+                print()
                 raygun = True
                 # raygun interaction with 1% chance of happening
     while stage == 2:
@@ -431,81 +442,34 @@ while not done:
             days += 1
             aliendistance += alienmr
             events = 0
-            heat -= 1
+            if heat > 0:
+                heat -= 1
             print("It's been a long day so you take a rest to get some shut-eye.")
             print("The aliens are", distance, "miles behind. It worries you slightly but being"
                                               " well rested is important.")
             print()
         if choice.lower().strip() == "quit":
+            totalm += miles
+            totald += days
             break
         if heat > 4:
             print("Gave over!")
             print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
-            if not achievement_6:
+            if not achievement_7:
                 print("Achievement 'Haste Makes Waste' has been unlocked!")
-                achievement_6 = True
-            again = input("Would you like to try again?")
-            print()
-            if again.lower().strip() == "no":
-                done = True
-            else:
-                print("The game will now continue.")
-                print()
-                totalm += miles
-                totald += days
-                choice = "blank"
-                fuel = 10
-                alienmr = random.randrange(8, 16)
-                days = 0
-                tank = 10
-                travel = 0
-                miles = 0
-                dialogue = True
-                dialogue2 = True
-                radar = True
-                ae = False
-                raygun = False
-                done = False
-                aliendistance = -20
-                playerdistance = 0
-                distance = playerdistance - aliendistance
-                stage = 1
-                events = 0
-                heat = 0
+                achievement_7 = True
+            leave()
+            if breakv:
+                break
         if distance < 1:
             print("Game over!")
             print("The aliens caught up to you. Was it just bad luck or could you have played better?")
             if not achievement_1:
                 print("Achievement 'Inferior Species' has been unlocked!")
                 achievement_1 = True
-            again = input("Would you like to try again?")
-            print()
-            if again.lower().strip() == "no":
+            leave()
+            if breakv:
                 break
-            else:
-                totalm += miles
-                totald += days
-                choice = "blank"
-                fuel = 10
-                alienmr = random.randrange(8, 16)
-                days = 0
-                tank = 10
-                travel = 0
-                miles = 0
-                dialogue = True
-                dialogue2 = True
-                radar = True
-                ae = False
-                raygun = False
-                done = False
-                aliendistance = -20
-                playerdistance = 0
-                distance = playerdistance - aliendistance
-                stage = 1
-                events = 0
-                heat = 0
-                print("The game will now continue.")
-                print()
         alienmr = random.randrange(10, 20)
         if dialogue2:
             print("It's been over a hundred miles now. Earth looks larger and larger as you approach it.")
@@ -518,34 +482,9 @@ while not done:
             if not achievement_2:
                 print("Achievement 'Home Safe' has been unlocked!")
                 achievement_2 = True
-            print("Your statistics have been saved.")
-            again = input("Would you like to play again?")
-            if again.lower().strip() == "yes":
-                totalm += miles
-                totald += days
-                choice = "blank"
-                fuel = 10
-                alienmr = random.randrange(8, 16)
-                days = 0
-                tank = 10
-                travel = 0
-                miles = 0
-                dialogue = True
-                dialogue2 = True
-                radar = True
-                ae = False
-                raygun = False
-                done = False
-                aliendistance = -20
-                playerdistance = 0
-                distance = playerdistance - aliendistance
-                stage = 1
-                events = 0
-                heat = 0
-                print("The game will continue.")
-                print()
-            else:
-                done = True
+            leave()
+            if breakv:
+                break
         if distance < 20 and ae or raygun:
             print("The aliens will catch up in no time, you're running out of options!")
             print()
@@ -557,188 +496,93 @@ while not done:
                 print()
                 if end == 1:
                     rgending()
-                    if not achievement_5:
+                    if not achievement_6:
                         print("Achievement 'Locked and Loaded' unlocked!")
-                        achievement_5 = True
+                        achievement_6 = True
                     print()
-                    print("Your statistics have been saved.")
-                    again = input("Would you like to play again?")
-                    if again.lower().strip() == "yes":
-                        totalm += miles
-                        totald += days
-                        choice = "blank"
-                        fuel = 10
-                        alienmr = random.randrange(8, 16)
-                        days = 0
-                        tank = 10
-                        travel = 0
-                        miles = 0
-                        dialogue = True
-                        dialogue2 = True
-                        radar = True
-                        ae = False
-                        raygun = False
-                        done = False
-                        aliendistance = -20
-                        playerdistance = 0
-                        distance = playerdistance - aliendistance
-                        stage = 1
-                        events = 0
-                        heat = 0
-                        print("The game will continue.")
-                        print()
-                    else:
-                        done = True
+                    leave()
+                    if breakv:
+                        break
                 else:
                     aending()
-                    if not achievement_4:
+                    if not achievement_5:
                         print("Achievement 'Misunderstood' unlocked!")
-                        achievement_3 = True
-                    print("Your statistics have been saved.")
-                    again = input("Would you like to play again?")
-                    if again.lower().strip() == "yes":
-                        choice = "blank"
-                        fuel = 10
-                        alienmr = random.randrange(8, 16)
-                        days = 0
-                        tank = 10
-                        travel = 0
-                        miles = 0
-                        dialogue = True
-                        dialogue2 = True
-                        radar = True
-                        ae = False
-                        raygun = False
-                        done = False
-                        aliendistance = -20
-                        playerdistance = 0
-                        distance = playerdistance - aliendistance
-                        stage = 1
-                        events = 0
-                        heat = 0
-                        print("The game will continue.")
-                        print()
+                        achievement_5 = True
+                    leave()
+                    if breakv:
+                        break
             elif ae:
                 aending()
-                if not achievement_4:
+                if not achievement_5:
                     print("Achievement 'Misunderstood' unlocked!")
-                    achievement_3 = True
-                print("Your statistics have been saved.")
-                again = input("Would you like to play again?")
-                if again.lower().strip() == "yes":
-                    totalm += miles
-                    totald += days
-                    choice = "blank"
-                    fuel = 10
-                    alienmr = random.randrange(8, 16)
-                    days = 0
-                    tank = 10
-                    travel = 0
-                    miles = 0
-                    dialogue = True
-                    dialogue2 = True
-                    radar = True
-                    ae = False
-                    raygun = False
-                    done = False
-                    aliendistance = -20
-                    playerdistance = 0
-                    distance = playerdistance - aliendistance
-                    stage = 1
-                    events = 0
-                    heat = 0
-                    print("The game will continue.")
-                    print()
-                else:
-                    done = True
+                    achievement_5 = True
+                leave()
+                if breakv:
+                    break
             else:
                 rgending()
-                if not achievement_5:
+                if not achievement_6:
                     print("Achievement 'Locked and Loaded' unlocked!")
-                    achievement_5 = True
+                    achievement_6 = True
                 print()
                 print("Your statistics have been saved.")
                 again = input("Would you like to play again?")
                 if again.lower().strip() == "yes":
-                    totalm += miles
-                    totald += days
-                    choice = "blank"
-                    fuel = 10
-                    alienmr = random.randrange(8, 16)
-                    days = 0
-                    tank = 10
-                    travel = 0
-                    miles = 0
-                    dialogue = True
-                    dialogue2 = True
-                    radar = True
-                    ae = False
-                    raygun = False
-                    done = False
-                    aliendistance = -20
-                    playerdistance = 0
-                    distance = playerdistance - aliendistance
-                    stage = 1
-                    events = 0
-                    heat = 0
+                    reassign()
                     print("The game will continue.")
                     print()
                 else:
                     done = True
-        if distance < 20:
+        elif distance < 20:
             print("The aliens are closing in, and you have no choice but to try to improvise something!")
             print("You see a few planets out in the distance, maybe you have enough fuel to make "
                   "it to one of them if you put the ship in overdrive.")
-            print("Buckling your seatbelt even tighter, you put the spaceship into overdrive.")
-            print("The quick acceleration almost sends you flying, but you hang on tight.")
-            print()
-            # rng ending lmao
-            if fuel > 20:
-                chance = random.randrange(1, 25)
-            elif fuel > 10:
-                chance = random.randrange(1, 50)
-            else:
-                chance = random.randrange(1, 100)
-            if chance == 1:
-                print("Hoping and praying all the way, somehow you enter one of the planet's atmospheres!")
-                print("Looking around, there's enough resources to make something with.")
-                print("Looking into the sky, you can see the alien aircraft getting further away.")
-                print("It seems they gave up on you.")
-                print("This is the start of a new future!")
+            bet = input("Do you want to make an attempt for it? Type yes or no.")
+            if bet.lower().strip() == "yes":
+                print("Buckling your seatbelt even tighter, you put the spaceship into overdrive.")
+                print("The quick acceleration almost sends you flying, but you hang on tight.")
                 print()
-                print("Congratulations! You got lucky and found somewhere new to call home.")
-                if not achievement_3:
-                    print("Achievement 'Escape' unlocked!")
-                    achievement_3 = True
-                print()
-                print("Your statistics have been saved.")
-                again = input("Would you like to play again?")
-                if again.lower().strip() == "yes":
-                    totalm += miles
-                    totald += days
-                    choice = "blank"
-                    fuel = 10
-                    alienmr = random.randrange(8, 16)
-                    days = 0
-                    tank = 10
-                    travel = 0
-                    miles = 0
-                    dialogue = True
-                    dialogue2 = True
-                    radar = True
-                    ae = False
-                    raygun = False
-                    done = False
-                    aliendistance = -20
-                    playerdistance = 0
-                    distance = playerdistance - aliendistance
-                    stage = 1
-                    events = 0
-                    heat = 0
-                    print("The game will continue.")
-                    print()
+                # rng ending lmao
+                if fuel + tank > 25:
+                    chance = random.randrange(1, 25)
+                elif fuel + tank > 10:
+                    chance = random.randrange(1, 50)
                 else:
+                    chance = random.randrange(1, 100)
+                if chance == 1:
+                    print("Hoping and praying all the way, somehow you enter one of the planet's atmospheres!")
+                    print("Looking around, there's enough resources to make something with.")
+                    print("Looking into the sky, you can see the alien aircraft getting further away.")
+                    print("It seems they gave up on you.")
+                    print("This is the start of a new future!")
+                    print()
+                    print("Congratulations! You got lucky and found somewhere new to call home.")
+                    if not achievement_3:
+                        print("Achievement 'Die Hard' unlocked!")
+                        achievement_3 = True
+                    print()
+                    print("Your statistics have been saved.")
+                    again = input("Would you like to play again?")
+                    if again.lower().strip() == "yes":
+                        reassign()
+                        print("The game will continue.")
+                        print()
+                else:
+                    print("As you approach the planet, it becomes mercilessly clear that you "
+                          "won't be able to reach it.")
+                    print("You close your eyes and let fate reign.")
+                    print()
+                    print("You died!")
+                    totald += days
+                    totalm += miles
+                    if not achievement_4:
+                        print("Achievement 'Die Trying' unlocked!")
+                        achievement_4 = True
                     done = True
+                    break
+            else:
+                print("You chose not to take a risk.")
+                print()
         interaction = random.randrange(1, 100)
         if interaction > 95 and not ae:
             if heat > 0:
@@ -761,8 +605,13 @@ while not done:
             # manuscript interaction with 5% chance of happening
             # unlocks the join alien ending in the future
         elif interaction > 90:
-            print("Using the ship's built in radar, you see that the aliens are", distance, "miles behind you.")
-            events += 1
+            if radar:
+                print("Using the ship's built in radar, you see that the aliens are", distance, "miles behind you.")
+                print()
+                events += 1
+                radar = False
+            else:
+                radar = True
             # random check interaction with 5% chance of occuring
         elif interaction > 40:
             print("You feel like your velocity needs some tinkering with so you stop for a moment to "
@@ -787,8 +636,8 @@ while not done:
                 heat += 1
                 print("You decided to keep up a moderate speed for today and tonight. This "
                       "will use one gallon of gas.")
-                print("Your spaceship has a heat level of:", heat, ". If this level reaches 5, your ship will"
-                                                                   " spontaneously combust. Be careful.")
+                print("Your spaceship has a heat level of:", heat, )
+                print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
                 travel = random.randrange(8, 16)
                 print("You travelled", travel, "miles today.")
                 miles += travel
@@ -799,8 +648,8 @@ while not done:
                 heat += 2
                 print("You decided to go full speed for today and tonight. This "
                       "will use two gallons of gas.")
-                print("Your spaceship has a heat level of:", heat, ". If this level reaches 5, your ship will"
-                                                                   " spontaneously combust. Be careful.")
+                print("Your spaceship has a heat level of:", heat, )
+                print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
                 travel = random.randrange(10, 20)
                 print("You travelled", travel, "miles today.")
                 events += 1
@@ -818,12 +667,7 @@ while not done:
                 aliendistance += alienmr
                 events = 0
             elif choice.strip().upper() == "E":
-                aliendistance += alienmr
-                print("Total days passed:", days, "days.")
-                print("Miles traveled:", playerdistance, "miles.")
-                print("Spare fuel:", fuel, "gallons.")
-                print("Your heat level is:", heat,)
-                print("The aliens are", distance, "miles behind you.")
+                checkstatus()
             elif choice.strip().upper() == "I":
                 if raygun and ae:
                     print("You have a raygun and the alien manifest.")
@@ -920,6 +764,7 @@ while not done:
                 print("You decided to examine the exterior of your ship on a whim.")
                 print("You found a ray-gun taped to the bottom of your ship!")
                 print("This may prove useful in the future.")
+                print()
                 raygun = True
                 # raygun interaction with 5% chance of happening
         distance = playerdistance - aliendistance
@@ -939,21 +784,24 @@ if achievement_2:
     print("Achievement 2: Home Safe")
     acs += 1
 if achievement_3:
-    print("Achievement 3: Escape")
+    print("Achievement 3: Die Hard")
     acs += 1
 if achievement_4:
-    print("Achievement 4: Misunderstood")
+    print("Achievement 4: Die Trying")
     acs += 1
 if achievement_5:
-    print("Achievement 5: Locked and Loaded")
+    print("Achievement 5: Misunderstood")
     acs += 1
 if achievement_6:
-    print("Achievement 6: Haste Makes Waste")
+    print("Achievement 6: Locked and Loaded")
     acs += 1
-if acs == 6:
-    print("Achievement 7: SG Mastery")
+if achievement_7:
+    print("Achievement 7: Haste Makes Waste")
     acs += 1
-comprate = acs/7
+if acs == 7:
+    acs += 1
+    print("Achievement 8: SG Mastery")
+comprate = acs/8
 fcomprate = "{:.2f}".format(comprate)
-print("You completed", acs, "achievements out of 7!")
+print("You completed", acs, "achievements out of 8!")
 print("That gives you a completion rate of", fcomprate, "percent.")
