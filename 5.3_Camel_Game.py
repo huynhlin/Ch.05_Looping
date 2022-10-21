@@ -24,10 +24,22 @@ totalm = 0
 totald = 0
 
 
+def cool():
+    global heat
+    if heat > 0:
+        heat -= 1
+
+
 def leave():
     global done
     global again
     global breakv
+    global totalm
+    global totald
+    global miles
+    global days
+    totalm += miles
+    totald += days
     again = input("Would you like to play again?")
     print()
     if again.lower().strip() == "no":
@@ -43,6 +55,7 @@ def checkstatus():
     print("Total days passed:", days, "days.")
     print("Miles traveled:", playerdistance, "miles.")
     print("Spare fuel:", fuel, "gallons.")
+    print("Gallons in tank:", tank, " gallons.")
     print("Your heat level is:", heat, )
     print("The aliens are", distance, "miles behind you.")
     print()
@@ -99,7 +112,7 @@ def reassign():
 def rgending():
     print("You hate to do this, but there's no other options.")
     print("You open the hatch on your spaceship, exiting while holding the raygun.")
-    print("You have to move quick, if you hesitate the aliens will see and bring you to your"
+    print("You have to move quick, if you hesitate, the aliens will see and bring you to your"
           "demise before you can bring them to theirs.")
     print("After a deep breath, you kill all your hesitation.")
     print("Aiming as quickly as you can, you pull the trigger.")
@@ -112,11 +125,14 @@ def rgending():
 
 
 def aending():
+    print("Remembering the alien book you found, you can't help but wonder if they're friendly."
+          " That's your best bet right now so you decide to bank it all on that hope.")
+    print()
     print("With your hands up, you exit your spaceship.")
     print("You can't tell if the aliens are friendly or not, but this is the only chance you have.")
     print("An alien exits the enemy aircraft.")
     print("You'd be sweating if it wasn't cold in outer space. With your hands shaking,"
-          "you hand them the alien manuscript.")
+          " you hand them the alien manuscript.")
     print("The alien looks at it for a second. Then back to you.")
     print("Remembering the graphic found inside it, you hold out your hand for a handshake.")
     print("...")
@@ -137,6 +153,7 @@ def inventory():
 
 def rg():
     print("The raygun feels heavy and looks dangerous. If I were you, I'd only use it as a last resort.")
+    print()
     # just another function to save code time and make it cleaner
 
 
@@ -198,11 +215,22 @@ while not done:
             stage = 2
             events = 0
         if events == 3:
+            if heat > 4:
+                print("Gave over!")
+                print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
+                if not achievement_7:
+                    print("Achievement 'Haste Makes Waste' has been unlocked!")
+                    achievement_7 = True
+                leave()
+                if breakv:
+                    break
             days += 1
             aliendistance += alienmr
             events = 0
-            if heat > 0:
-                heat -= 1
+            if heat > 1:
+                heat -= 2
+            else:
+                heat = 0
             print("It's been a long day so you take a rest to get some shut-eye.")
             print("The aliens are", distance, "miles behind. It worries you slightly but being"
                                               " well rested is important.")
@@ -229,14 +257,20 @@ while not done:
                 break
         interaction = random.randrange(1, 100)
         if interaction > 95:
-            if heat > 0:
-                heat -= 1
+            if heat > 4:
+                print("Gave over!")
+                print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
+                if not achievement_7:
+                    print("Achievement 'Haste Makes Waste' has been unlocked!")
+                    achievement_7 = True
+                leave()
+                if breakv:
+                    break
+            cool()
             print("While looking out into the abyss, you noticed a small floating box. Loot may be contained inside.")
             box = input("Will you go out and investigate? Type yes or no.")
             print()
             if box.lower().strip() == "yes" and not ae:
-                if heat > 0:
-                    heat -= 1
                 print("Inside you found a gallon of fuel and what looks like some kind of foreign book!")
                 print("After investigating the book more, it appears to be an alien manifest.")
                 print("Good find! It might prove useful in the future.")
@@ -266,16 +300,13 @@ while not done:
             else:
                 radar = True
         elif interaction > 20:
-            print("You feel like your velocity needs some tinkering with so you stop for a moment to "
-                  "change something.")
             options()
             choice = input("What would you like to do?")
             print()
             if choice.strip().upper() == "A" and fuel > 0:
                 tank += fuel
-                if heat > 0:
-                    heat -= 1
                 fuel = 0
+                cool()
                 print("You decided to add all fuel to your ship's tank. You have", tank,
                       "gallons in your tank now.")
                 events += 1
@@ -285,13 +316,14 @@ while not done:
                 print()
             elif choice.strip().upper() == "B" and tank > 0:
                 tank -= 1
-                if heat > 0:
-                    heat += 1
+                heat += 1
                 print("You decided to keep up a moderate speed for today and tonight. This "
                       "will use one gallon of gas.")
                 print("Your spaceship has a heat level of:", heat,)
-                print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
-                travel = random.randrange(8, 16)
+                if dialogue:
+                    print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
+                    dialogue = False
+                travel = random.randrange(6, 12)
                 print("You travelled", travel, "miles today.")
                 miles += travel
                 events += 1
@@ -303,14 +335,16 @@ while not done:
                 print("You decided to go full speed for today and tonight. This "
                       "will use two gallons of gas.")
                 print("Your spaceship has a heat level of:", heat, )
-                print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
-                travel = random.randrange(10, 20)
+                if dialogue:
+                    print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
+                    dialogue = False
+                travel = random.randrange(7, 14)
                 print("You travelled", travel, "miles today.")
                 events += 1
                 miles += travel
                 playerdistance += travel
                 print()
-            elif choice.strip().upper() == "C" or choice.strip().upper() == "B" and tank == 0:
+            elif tank == 0 and choice.strip().upper() == "C" or choice.strip().upper() == "B":
                 print("You have no fuel in your tank!")
             elif choice.strip().upper() == "D":
                 print("You decided to stop for the night.")
@@ -319,6 +353,10 @@ while not done:
                 days += 1
                 aliendistance += alienmr
                 events = 0
+                if 0 < heat < 3:
+                    heat = 0
+                elif heat > 3:
+                    heat -= 2
             elif choice.strip().upper() == "E":
                 checkstatus()
             elif choice.strip().upper() == "I":
@@ -326,6 +364,7 @@ while not done:
                     print("You have a raygun and the alien manifest.")
                     inventory()
                     check = int(input("Type a number from 1-9 or 0 to exit the inventory."))
+                    print()
                     if check == 1:
                         rg()
                     elif check == 2:
@@ -369,8 +408,16 @@ while not done:
                     break
                 # gas interaction with 60% chance of happening
         elif interaction > 10:
-            if heat > 0:
-                heat -= 1
+            cool()
+            if heat > 4:
+                print("Gave over!")
+                print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
+                if not achievement_7:
+                    print("Achievement 'Haste Makes Waste' has been unlocked!")
+                    achievement_7 = True
+                leave()
+                if breakv:
+                    break
             print("You stumbled across what seems like another traveller's wreckage, "
                   "there is spare fuel.")
             take = input("Will you take the fuel? Type yes or no.")
@@ -384,10 +431,13 @@ while not done:
                 else:
                     print("While trying to take the fuel, you accidentally drop a lighter and cause an explosion!")
                     print("You died!")
+                    print()
                     if not achievement_4:
                         print("Achievement 'Die Trying' has been unlocked!")
                         achievement_4 = True
-
+                    leave()
+                    if breakv:
+                        break
             elif take.lower().strip() == "no":
                 print("You decided not to take the fuel. Let's hope this is not a regrettable decision.")
                 print()
@@ -396,8 +446,16 @@ while not done:
                 done = True
                 stage = 100
         elif interaction > 2:
-            if heat > 0:
-                heat -= 1
+            cool()
+            if heat > 4:
+                print("Gave over!")
+                print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
+                if not achievement_7:
+                    print("Achievement 'Haste Makes Waste' has been unlocked!")
+                    achievement_7 = True
+                leave()
+                if breakv:
+                    break
             print("Curiously, you gaze out into the empty space.")
             sight = random.randrange(1, 8)
             if sight == 8 and not ae:
@@ -427,8 +485,7 @@ while not done:
             # sight interaction with 8% chance of happening
         else:
             if not raygun:
-                if heat > 0:
-                    heat -= 1
+                cool()
                 print("You decided to examine the exterior of your ship on a whim.")
                 print("You found a ray-gun taped to the bottom of your ship!")
                 print("This may prove useful in the future.")
@@ -442,8 +499,7 @@ while not done:
             days += 1
             aliendistance += alienmr
             events = 0
-            if heat > 0:
-                heat -= 1
+            cool()
             print("It's been a long day so you take a rest to get some shut-eye.")
             print("The aliens are", distance, "miles behind. It worries you slightly but being"
                                               " well rested is important.")
@@ -473,7 +529,7 @@ while not done:
         alienmr = random.randrange(10, 20)
         if dialogue2:
             print("It's been over a hundred miles now. Earth looks larger and larger as you approach it.")
-            print("However, the aliens seem to be getting closer, and quicker, as the days pass.")
+            print("However, the aliens seem to be getting closer and quicker as the days pass.")
             print()
             dialogue2 = False
         if playerdistance > 200 > aliendistance:
@@ -489,10 +545,10 @@ while not done:
             print("The aliens will catch up in no time, you're running out of options!")
             print()
             if ae and raygun:
-                print("You have read the alien's manuscript and you have the raygun...")
+                print("You have the alien's manuscript and you have the raygun...")
                 print("Seems like you'll have to forge your own adventure now!")
-                end = input("Do you want to eliminate them or join their ranks? "
-                            "Type 1 for elimination and 2 for an alliance.")
+                end = int(input("Do you want to eliminate them or join their ranks? "
+                                "Type 1 for elimination and 2 for an alliance."))
                 print()
                 if end == 1:
                     rgending()
@@ -578,15 +634,24 @@ while not done:
                     if not achievement_4:
                         print("Achievement 'Die Trying' unlocked!")
                         achievement_4 = True
-                    done = True
-                    break
+                    leave()
+                    if breakv:
+                        break
             else:
                 print("You chose not to take a risk.")
                 print()
         interaction = random.randrange(1, 100)
         if interaction > 95 and not ae:
-            if heat > 0:
-                heat -= 1
+            cool()
+            if heat > 4:
+                print("Gave over!")
+                print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
+                if not achievement_7:
+                    print("Achievement 'Haste Makes Waste' has been unlocked!")
+                    achievement_7 = True
+                leave()
+                if breakv:
+                    break
             print("While looking out into the abyss, you noticed a small floating box. Loot may be contained inside.")
             box = input("Will you go out and investigate? Type yes or no.")
             if box.lower().strip() == "yes":
@@ -605,6 +670,16 @@ while not done:
             # manuscript interaction with 5% chance of happening
             # unlocks the join alien ending in the future
         elif interaction > 90:
+            if heat > 4:
+                print("Gave over!")
+                print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
+                if not achievement_7:
+                    print("Achievement 'Haste Makes Waste' has been unlocked!")
+                    achievement_7 = True
+                leave()
+                if breakv:
+                    break
+            cool()
             if radar:
                 print("Using the ship's built in radar, you see that the aliens are", distance, "miles behind you.")
                 print()
@@ -614,15 +689,12 @@ while not done:
                 radar = True
             # random check interaction with 5% chance of occuring
         elif interaction > 40:
-            print("You feel like your velocity needs some tinkering with so you stop for a moment to "
-                  "change something.")
             options()
             choice = input("What would you like to do?")
             print()
             if choice.strip().upper() == "A" and fuel > 0:
                 tank += fuel
-                if heat > 0:
-                    heat -= 1
+                cool()
                 fuel = 0
                 print("You decided to add all fuel to your ship's tank. You have", tank, "gallons in your "
                       "tank now.")
@@ -637,8 +709,7 @@ while not done:
                 print("You decided to keep up a moderate speed for today and tonight. This "
                       "will use one gallon of gas.")
                 print("Your spaceship has a heat level of:", heat, )
-                print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
-                travel = random.randrange(8, 16)
+                travel = random.randrange(6, 12)
                 print("You travelled", travel, "miles today.")
                 miles += travel
                 events += 1
@@ -649,20 +720,21 @@ while not done:
                 print("You decided to go full speed for today and tonight. This "
                       "will use two gallons of gas.")
                 print("Your spaceship has a heat level of:", heat, )
-                print("If this level reaches 5, your ship will spontaneously combust. Be careful.")
-                travel = random.randrange(10, 20)
+                travel = random.randrange(8, 16)
                 print("You travelled", travel, "miles today.")
                 events += 1
                 miles += travel
                 print()
-            elif choice.strip().upper() == "C" or choice.strip().upper() == "B" and tank == 0:
+            elif tank == 0 and choice.strip().upper() == "C" or choice.strip().upper() == "B":
                 print("You have no fuel in your tank!")
             elif choice.strip().upper() == "D":
                 print("You decided to stop for the night.")
                 print("Night falls.")
                 print()
-                if heat > 0:
-                    heat -= 1
+                if 0 < heat < 3:
+                    heat = 0
+                elif heat > 3:
+                    heat -= 2
                 days += 1
                 aliendistance += alienmr
                 events = 0
@@ -712,15 +784,27 @@ while not done:
                     stage = 100
                 # gas interaction with 50% chance of happening
         elif interaction > 22:
-            if heat > 0:
-                heat -= 1
+            cool()
             print("You stumbled across what seems like another traveller's wreckage, "
                   "there is spare fuel.")
-            take = input("Will you take the fuel? Type yes or no.")
+            take = input("Will you take the fuel?")
+            print()
             if take.lower().strip() == "yes":
-                fuel += 5
-                print()
-                print("You took the fuel. You now have", fuel, "gallons of fuel.")
+                rng = random.randrange(1, 100)
+                if rng > 2:
+                    fuel += 5
+                    print("You took the fuel. You now have", fuel, "gallons of fuel.")
+                    print()
+                else:
+                    print("While trying to take the fuel, you accidentally drop a lighter and cause an explosion!")
+                    print("You died!")
+                    print()
+                    if not achievement_4:
+                        print("Achievement 'Die Trying' has been unlocked!")
+                        achievement_4 = True
+                    leave()
+                    if breakv:
+                        break
             elif take.lower().strip() == "no":
                 print("You decided not to take the fuel. Let's hope this is not a regrettable decision.")
                 # refuel interaction with 12% chance of happening
@@ -728,8 +812,16 @@ while not done:
                 done = True
                 stage = 100
         elif interaction > 12:
-            if heat > 0:
-                heat -= 1
+            cool()
+            if heat > 4:
+                print("Gave over!")
+                print("Your spaceship overheated and exploded! Maybe you should be more patient next time.")
+                if not achievement_7:
+                    print("Achievement 'Haste Makes Waste' has been unlocked!")
+                    achievement_7 = True
+                leave()
+                if breakv:
+                    break
             print("Curiously, you gaze out into the empty space.")
             sight = random.randrange(1, 8)
             if sight == 8 and not ae:
@@ -759,8 +851,7 @@ while not done:
             # sight interaction with 21% chance of happening
         else:
             if not raygun:
-                if heat > 0:
-                    heat -= 1
+                cool()
                 print("You decided to examine the exterior of your ship on a whim.")
                 print("You found a ray-gun taped to the bottom of your ship!")
                 print("This may prove useful in the future.")
@@ -774,9 +865,11 @@ while not done:
 
 
 print("Thank you for playing! Your statistics will now be listed below")
+print()
 print("Total days played:", totald)
 print("Total miles travelled:", totalm)
 print("Achievements Collected:")
+print()
 if achievement_1:
     print("Achievement 1: Inferior Species")
     acs += 1
@@ -799,9 +892,14 @@ if achievement_7:
     print("Achievement 7: Haste Makes Waste")
     acs += 1
 if acs == 7:
+    achievement_8 = True
     acs += 1
     print("Achievement 8: SG Mastery")
 comprate = acs/8
 fcomprate = "{:.2f}".format(comprate)
 print("You completed", acs, "achievements out of 8!")
 print("That gives you a completion rate of", fcomprate, "percent.")
+if achievement_8:
+    print("You are in the top 0.01% of players who had full completion!")
+print()
+print("Thank you for playing!")
