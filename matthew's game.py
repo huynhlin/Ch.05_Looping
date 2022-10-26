@@ -8,6 +8,7 @@ done = False
 continueGame = False
 breaktest = False
 ip = False
+cp = False
 camelMiles = 0
 nativeMiles = 0
 water = 100
@@ -16,6 +17,7 @@ canteens = 5
 money = 50
 speedMult = 1
 statusMult = 1
+cb = 1
 days = 1
 lastMove = 1
 replenishedDays = 0
@@ -28,7 +30,8 @@ treasureItems = ["Gatorade", "Raygun", "Coupon", "Piece of trash", "Steroid", "B
 userItems = []
 
 # Upgrade Shop
-canteensCost = 30
+canteensCost = 20
+# each
 # horseShoes -- The list means [speed multiplier, price]
 horseShoeNames = ["None", "Bronze", "Silver", "Gold", "Platinum", "Rocket"]
 horseShoes = {horseShoeNames[0]: [1, 0],
@@ -40,6 +43,7 @@ horseShoes = {horseShoeNames[0]: [1, 0],
 oasisUpgradeCost = 200
 treasureUpgradeCost = 300
 interestCost = 10000
+csbCost = 20000
 rgSellPrice = 200
 potSellPrice = 50
 
@@ -104,7 +108,7 @@ def camel_drink(amt):
 
 
 def camel_run(speedMult, waterCost, energyCost):
-    global camelMiles, water, energy, days, replenishedDays, interest, money
+    global camelMiles, water, energy, days, replenishedDays, interest, money, cb
     camelMiles += round(random.randint(6, 14) * speedMult)
     water -= round(waterCost * statusMult)
     energy -= round(energyCost * statusMult)
@@ -118,6 +122,8 @@ def camel_run(speedMult, waterCost, energyCost):
         interest = money * 0.02
         int(interest)
         money += round(interest)
+    if cp:
+        cb = 1 + (canteens * 0.01)
 
 def camel_died():
     global done, camelMiles
@@ -236,7 +242,8 @@ def use_item():
 
 
 def upgrade_menu():
-    global horseShoeTier, horseShoes, money, speedMult, canteens, canteensCost, oasisChance, oasisUpgradeCost, treasureUpgradeCost, treasureChance, rgSellPrice, ip, interestCost
+    global horseShoeTier, horseShoes, money, speedMult, canteens, canteensCost, oasisChance, oasisUpgradeCost, treasureUpgradeCost, \
+        treasureChance, rgSellPrice, ip, interestCost, cp, csbCost
 
     if horseShoeTier < 5:
         nextShoeName = horseShoeNames[horseShoeTier + 1]
@@ -249,7 +256,7 @@ def upgrade_menu():
         print("1] Upgrade to {} horseshoes ... ${}".format(nextShoeName, nextShoeCost))
     else:
         print("1] Out of stock!")
-    print("2] Buy +3 canteens ............ ${}".format(canteensCost))
+    print("2] Buy canteens .............. ${}x".format(canteensCost))
     print("3] +3% Chance of oasis ....... ${}".format(oasisUpgradeCost))
     print("4] +5% Chance of treasure .... ${}".format(treasureUpgradeCost))
     if not ip:
@@ -257,6 +264,7 @@ def upgrade_menu():
     else:
         print("5] Out of stock!")
     print("6] Sell item ................. +$")
+    print("7] Canteen speed boost ...... ${}".format(csbCost))
     print("e] EXIT menu")
 
     userUpgradeInput = input("\nChoose your option: ").lower().strip()
@@ -275,10 +283,12 @@ def upgrade_menu():
         if money < canteensCost:
             print("You can't afford that!")
         else:
-            money -= canteensCost
-            canteens += 3
-            print("Purchased successfully! You now have {} canteens!!".format(canteens))
-            canteensCost += 5
+            bought = int(input("How many canteens would you like to buy?"))
+            canteens += bought
+            money -= (bought * canteensCost)
+            print("You bought {} canteens!".format(bought))
+            print("Purchased successfully! You now have {} canteens!".format(canteens))
+            canteensCost += 1
     elif userUpgradeInput == "3":
         if money < oasisUpgradeCost:
             print("You can't afford that!")
@@ -329,6 +339,15 @@ def upgrade_menu():
                       "\nYou will now gain a small amount of income per round based on your total money!")
                 ip = True
                 money -= interestCost
+            else:
+                print("You can't afford that!")
+    elif userUpgradeInput == "7":
+        if not cp:
+            if money > csbCost:
+                print("You purchased the canteen speed boost! "
+                      "\nYou will now gain a small speed multiplier based on how many canteens you have!")
+                cp = True
+                money -= csbCost
             else:
                 print("You can't afford that!")
         else:
@@ -412,6 +431,8 @@ while not done:
     if days > 2: print("* The natives are {} miles behind you".format(camelMiles - nativeMiles))
     if ip:
         print("* You gained ${}".format(math.trunc(interest)), "from interest!")
+    if cp:
+        print("* Your canteen speed boost today was {:.2f}%".format(cb))
     print("* ${}".format(money))
     print("1] DRINK from your canteen")
     print("2] Ahead MODERATE SPEED")
@@ -429,9 +450,9 @@ while not done:
     if userInput == "1" or userInput.lower().strip() == "drink":
         camel_drink(40)
     elif userInput == "2" or userInput == "moderate speed":
-        camel_run(1 * speedMult, 20, 15)
+        camel_run(1 * speedMult * cb , 20, 15)
     elif userInput == "3" or userInput == "full speed":
-        camel_run(2 * speedMult, 30, 30)
+        camel_run(2 * speedMult * cb, 30, 30)
     elif userInput == "4" or userInput.lower().strip() == "stop":
         camel_rest()
     elif userInput == "5" or userInput.lower().strip() == "inventory":
