@@ -113,7 +113,7 @@ def rgending():
     print("You hate to do this, but there's no other options.")
     print("You open the hatch on your spaceship, exiting while holding the raygun.")
     print("You have to move quick, if you hesitate, the aliens will see and bring you to your"
-          "demise before you can bring them to theirs.")
+          " demise before you can bring them to theirs.")
     print("After a deep breath, you kill all your hesitation.")
     print("Aiming as quickly as you can, you pull the trigger.")
     print("...")
@@ -532,7 +532,7 @@ while not done:
             print("However, the aliens seem to be getting closer and quicker as the days pass.")
             print()
             dialogue2 = False
-        if playerdistance > 200 > aliendistance:
+        if playerdistance > 200:
             # ending 2
             print("Congratulations you have made it back safely!")
             if not achievement_2:
