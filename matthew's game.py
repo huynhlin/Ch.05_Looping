@@ -256,15 +256,15 @@ def upgrade_menu():
         print("1] Upgrade to {} horseshoes ... ${}".format(nextShoeName, nextShoeCost))
     else:
         print("1] Out of stock!")
-    print("2] Buy canteens .............. ${}x".format(canteensCost))
-    print("3] +3% Chance of oasis ....... ${}".format(oasisUpgradeCost))
-    print("4] +5% Chance of treasure .... ${}".format(treasureUpgradeCost))
+    print("2] Buy canteens ................... ${}x".format(canteensCost))
+    print("3] +3% Chance of oasis ............ ${}".format(oasisUpgradeCost))
+    print("4] +5% Chance of treasure ......... ${}".format(treasureUpgradeCost))
     if not ip:
-        print("5] Interest upgrade .......... ${}".format(interestCost))
+        print("5] Interest upgrade ............... ${}".format(interestCost))
     else:
         print("5] Out of stock!")
-    print("6] Sell item ................. +$")
-    print("7] Canteen speed boost ...... ${}".format(csbCost))
+    print("6] Sell item ...................... +$")
+    print("7] Canteen speed boost ............ ${}".format(csbCost))
     print("e] EXIT menu")
 
     userUpgradeInput = input("\nChoose your option: ").lower().strip()
@@ -280,15 +280,18 @@ def upgrade_menu():
             horseShoeTier += 1
             print("Purchased successfully! Your speed multiplier is now x{}!".format(nextShoeMult))
     elif userUpgradeInput == "2":
-        if money < canteensCost:
-            print("You can't afford that!")
-        else:
-            bought = int(input("How many canteens would you like to buy?"))
-            canteens += bought
-            money -= (bought * canteensCost)
-            print("You bought {} canteens!".format(bought))
-            print("Purchased successfully! You now have {} canteens!".format(canteens))
-            canteensCost += 1
+            bought = int(input("How many canteens would you like to buy? (0 to cancel)"))
+            if money >= (bought * canteensCost):
+                canteens += bought
+                money -= (bought * canteensCost)
+                if bought == 0:
+                    print("Come back another time!")
+                else:
+                    print("You bought {} canteens!".format(bought))
+                    print("Purchased successfully! You now have {} canteens!".format(canteens))
+                    canteensCost += 1
+            else:
+                print("You can't afford that!")
     elif userUpgradeInput == "3":
         if money < oasisUpgradeCost:
             print("You can't afford that!")
